@@ -7,6 +7,10 @@
 -->
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</string>
 	<key>API_KEY</key>
 	<string>YOUR_API_KEY</string>
 	<key>GCM_SENDER_ID</key>

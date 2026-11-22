@@ -2,7 +2,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import Foundation
 
-/// Production backend. Access control lives in `firebase/firestore.rules`; this class
+/// Production backend. Access control lives in the Firestore security rules; this class
 /// never relies on the client for security decisions.
 ///
 /// Collections:

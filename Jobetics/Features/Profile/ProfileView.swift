@@ -97,6 +97,7 @@ struct ProfileView: View {
 
 struct EditProfileView: View {
     @Environment(MarketplaceStore.self) private var store
+    @Environment(AuthService.self) private var auth
     @Environment(\.dismiss) private var dismiss
     @State private var name = ""
     @State private var phone = ""
@@ -176,7 +177,10 @@ struct EditProfileView: View {
     }
 
     private func load() {
-        guard let account = store.account else { return }
+        guard let account = store.account else {
+            if name.isEmpty { name = auth.displayName ?? "" }
+            return
+        }
         name = account.displayName
         phone = account.phone ?? ""
         isFreelancer = account.isFreelancer
@@ -202,7 +206,7 @@ struct EditProfileView: View {
         }
         guard errors.isEmpty else { return }
 
-        let base = store.account ?? UserAccount(id: store.me, displayName: name, email: "", phone: nil, isFreelancer: isFreelancer,
+        let base = store.account ?? UserAccount(id: store.me, displayName: name, email: auth.email ?? "", phone: nil, isFreelancer: isFreelancer,
                                                 discipline: nil, links: [], jobAlertSkills: [], createdAt: .now)
         var account = base
         account.displayName = name

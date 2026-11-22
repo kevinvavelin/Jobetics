@@ -23,6 +23,10 @@ firebase-debug.log
 firestore-debug.log
 ui-debug.log
 
+# Firebase backend (rules, indexes, Cloud Functions): kept locally only and
+# deployed with the Firebase CLI from firebase/.
+/firebase/
+
 # Signing material
 *.p12
 *.p8
@@ -62,6 +66,9 @@ playground.xcworkspace
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Stray duplicate of Jobetics/AppIcon.icon at the repo root
+/AppIcon.icon/
 
 # Full-resolution App Store screenshots (31 MB, regenerate with scripts/screenshots.sh).
 # Lightweight README previews live in docs/screenshots/.

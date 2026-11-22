@@ -6,7 +6,7 @@ import Foundation
 ///
 /// Gemini is called directly from the app, so the call is a **first line of defense** that gives
 /// instant feedback. The authoritative decision is made again server-side by a Cloud Function
-/// on document creation (see `firebase/functions`), because a client can always be bypassed.
+/// on document creation (Cloud Functions, not in this repo), because a client can always be bypassed.
 final class ModerationService {
     enum Content {
         case job(JobPost)

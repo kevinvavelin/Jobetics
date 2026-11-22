@@ -2,15 +2,46 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Start a Pomodoro in ${applicationName}" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Iniciar un Pomodoro en ${applicationName}" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Lancer un Pomodoro dans ${applicationName}" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar un Pomodoro en ${applicationName}"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lancer un Pomodoro dans ${applicationName}"
+          }
+        }
       }
     },
     "Start focus in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Iniciar enfoque en ${applicationName}" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Lancer le focus dans ${applicationName}" } }
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Start focus in ${applicationName}",
+              "Start a Pomodoro in ${applicationName}"
+            ]
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Iniciar enfoque en ${applicationName}"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Lancer le focus dans ${applicationName}"
+          }
+        }
       }
     }
   },

@@ -52,7 +52,7 @@ On **iPad** the sidebar exposes the full suite: Calendar, Invoices, Quotes, Acco
 
 <table align="center">
   <tr>
-    <td align="center"><img src="docs/screenshots/en/iPhone/00-onboarding.jpg" width="190"><br><sub>Sign in with Apple</sub></td>
+    <td align="center"><img src="docs/screenshots/en/iPhone/00-onboarding.jpg" width="190"><br><sub>Sign in</sub></td>
     <td align="center"><img src="docs/screenshots/en/iPhone/09-home-dark.jpg" width="190"><br><sub>Dark mode</sub></td>
   </tr>
 </table>
@@ -104,18 +104,18 @@ open Jobetics.xcodeproj
 
 **Your own Firebase project:**
 1. Firebase console → add an iOS app with bundle id `fr.vavelinkevin.Jobetics` (or your own).
-2. Enable **Authentication › Sign in with Apple**, **Firestore**, **Cloud Messaging** (upload an APNs key) and **AI Logic** (Gemini Developer API), which enforces **App Check**.
-3. Download `GoogleService-Info.plist` to `Jobetics/GoogleService-Info.plist` (git-ignored; see `Config/GoogleService-Info.example.plist`).
+2. Enable **Authentication › Email/Password** and **Google**, **Firestore**, **Cloud Messaging** (upload an APNs key) and **AI Logic** (Gemini Developer API), which enforces **App Check**.
+3. Download `GoogleService-Info.plist` **after** enabling Google sign-in (it must contain `CLIENT_ID`) to `Jobetics/GoogleService-Info.plist` (git-ignored; see `Config/GoogleService-Info.example.plist`). Google sign-in reads the client ID from it at runtime, so no URL scheme is committed.
 4. Run once, copy the **App Check debug token** from the Xcode console, register it in *App Check › Apps › Manage debug tokens*. Never commit it.
-5. Deploy rules and functions: see [`firebase/README.md`](firebase/README.md).
+5. Deploy your own Firestore security rules, indexes and Cloud Functions with the Firebase CLI. The production backend is not part of this repository.
 
 Requirements: Xcode 26.2+, iOS/iPadOS 26.0+, watchOS 26.0+ (install the watchOS simulator runtime: `xcodebuild -downloadPlatform watchOS`).
 
 ## Security & privacy
 
 This repository is public. Nothing in it grants access to the Firebase project:
-- `GoogleService-Info.plist`, `.firebaserc`, service accounts, App Check tokens and signing files are git-ignored.
-- The Firebase API key in that plist is only an identifier. Access control lives in [`firebase/firestore.rules`](firebase/firestore.rules), App Check and Cloud Functions, never in the open-source client.
+- `GoogleService-Info.plist`, the Firebase backend folder, service accounts, App Check tokens and signing files are git-ignored.
+- The Firebase API key in that plist is only an identifier. Access control lives in Firestore security rules, App Check and Cloud Functions, never in the open-source client.
 - Server-side Gemini uses Vertex AI with the function's service account (no API key). The Safe Browsing key is a Secret Manager secret.
 - Private business data (invoices, accounting, portfolio) never leaves the user's iCloud.
 
@@ -131,7 +131,6 @@ Jobetics/            iOS & iPadOS app
 Shared/              Brand, score engine, Pomodoro model, App Group store, intents, String Catalog
 JobeticsWidgets/     WidgetKit: jobs, focus, motivation, control, Live Activity
 JobeticsWatch/       watchOS companion: Pomodoro, motivation, score
-firebase/            Firestore rules, indexes, Cloud Functions (TypeScript)
 scripts/             screenshots.sh (App Store screenshots from demo data)
 ```
 
