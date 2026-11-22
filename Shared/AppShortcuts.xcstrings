@@ -1,0 +1,18 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Start a Pomodoro in ${applicationName}" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Iniciar un Pomodoro en ${applicationName}" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Lancer un Pomodoro dans ${applicationName}" } }
+      }
+    },
+    "Start focus in ${applicationName}" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Iniciar enfoque en ${applicationName}" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Lancer le focus dans ${applicationName}" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

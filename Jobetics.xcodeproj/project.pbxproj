@@ -6,6 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1E9DFA7030B2F8B40064A2DC /* FirebaseAILogic in Frameworks */ = {isa = PBXBuildFile; productRef = 1E9DFA6F30B2F8B40064A2DC /* FirebaseAILogic */; };
+		1E9DFA7230B2F8B40064A2DC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1E9DFA7130B2F8B40064A2DC /* FirebaseAnalytics */; };
+		1E9DFA7430B2F8B40064A2DC /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1E9DFA7330B2F8B40064A2DC /* FirebaseAnalyticsCore */; };
+		1E9DFA7630B2F8B40064A2DC /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 1E9DFA7530B2F8B40064A2DC /* FirebaseAnalyticsIdentitySupport */; };
+		1E9DFA7830B2F8B40064A2DC /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 1E9DFA7730B2F8B40064A2DC /* FirebaseAppCheck */; };
+		266E330D2EE2700C3B1FE565 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 467BA92ECF3C8F0A6839EE34 /* FirebaseMessaging */; };
+		468F361D34B2A09F8CB63AC4 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 24DB671C1C2AB8F6F63A1142 /* FirebaseAuth */; };
+		4A0B0C0D0E0F000000000020 /* JobeticsWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4A0B0C0D0E0F000000000001 /* JobeticsWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4A0B0C0D0E0F000000000021 /* JobeticsWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4A0B0C0D0E0F000000000002 /* JobeticsWatch.app */; };
+		69B71067C1EBE9B3F13B863A /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 8DCAD89B8F33CA58C7DCF044 /* FirebaseCore */; };
+		F236B3599C57A9B6AC54380C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = ACD5EE006CF4A1362AEDBAD4 /* FirebaseFirestore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		1E9DFA3E30B2F5A00064A2DC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,17 +35,78 @@
 			remoteGlobalIDString = 1E9DFA2D30B2F5980064A2DC;
 			remoteInfo = Jobetics;
 		};
+		4A0B0C0D0E0F000000000022 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E9DFA2630B2F5980064A2DC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A0B0C0D0E0F00000000000A;
+			remoteInfo = JobeticsWidgets;
+		};
+		4A0B0C0D0E0F000000000023 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E9DFA2630B2F5980064A2DC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A0B0C0D0E0F000000000014;
+			remoteInfo = JobeticsWatch;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4A0B0C0D0E0F00000000001E /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4A0B0C0D0E0F000000000020 /* JobeticsWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A0B0C0D0E0F00000000001F /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				4A0B0C0D0E0F000000000021 /* JobeticsWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1E9DFA2E30B2F5980064A2DC /* Jobetics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Jobetics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E9DFA3D30B2F5A00064A2DC /* JobeticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobeticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E9DFA4730B2F5A00064A2DC /* JobeticsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobeticsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A0B0C0D0E0F000000000001 /* JobeticsWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = JobeticsWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A0B0C0D0E0F000000000002 /* JobeticsWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JobeticsWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1E34906B30B2FAA800F466A7 /* Exceptions for "Jobetics" folder in "Jobetics" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1E9DFA2D30B2F5980064A2DC /* Jobetics */;
+		};
+		4A0B0C0D0E0F000000000006 /* Exceptions for "JobeticsWidgets" folder in "JobeticsWidgets" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4A0B0C0D0E0F00000000000A /* JobeticsWidgets */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1E9DFA3030B2F5980064A2DC /* Jobetics */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1E34906B30B2FAA800F466A7 /* Exceptions for "Jobetics" folder in "Jobetics" target */,
+			);
 			path = Jobetics;
 			sourceTree = "<group>";
 		};
@@ -45,6 +120,24 @@
 			path = JobeticsUITests;
 			sourceTree = "<group>";
 		};
+		4A0B0C0D0E0F000000000003 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		4A0B0C0D0E0F000000000004 /* JobeticsWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4A0B0C0D0E0F000000000006 /* Exceptions for "JobeticsWidgets" folder in "JobeticsWidgets" target */,
+			);
+			path = JobeticsWidgets;
+			sourceTree = "<group>";
+		};
+		4A0B0C0D0E0F000000000005 /* JobeticsWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = JobeticsWatch;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +145,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E9DFA7630B2F8B40064A2DC /* FirebaseAnalyticsIdentitySupport in Frameworks */,
+				1E9DFA7230B2F8B40064A2DC /* FirebaseAnalytics in Frameworks */,
+				1E9DFA7430B2F8B40064A2DC /* FirebaseAnalyticsCore in Frameworks */,
+				1E9DFA7830B2F8B40064A2DC /* FirebaseAppCheck in Frameworks */,
+				1E9DFA7030B2F8B40064A2DC /* FirebaseAILogic in Frameworks */,
+				69B71067C1EBE9B3F13B863A /* FirebaseCore in Frameworks */,
+				468F361D34B2A09F8CB63AC4 /* FirebaseAuth in Frameworks */,
+				F236B3599C57A9B6AC54380C /* FirebaseFirestore in Frameworks */,
+				266E330D2EE2700C3B1FE565 /* FirebaseMessaging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +171,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4A0B0C0D0E0F00000000000C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A0B0C0D0E0F000000000016 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -76,6 +192,9 @@
 			isa = PBXGroup;
 			children = (
 				1E9DFA3030B2F5980064A2DC /* Jobetics */,
+				4A0B0C0D0E0F000000000003 /* Shared */,
+				4A0B0C0D0E0F000000000004 /* JobeticsWidgets */,
+				4A0B0C0D0E0F000000000005 /* JobeticsWatch */,
 				1E9DFA4030B2F5A00064A2DC /* JobeticsTests */,
 				1E9DFA4A30B2F5A00064A2DC /* JobeticsUITests */,
 				1E9DFA2F30B2F5980064A2DC /* Products */,
@@ -88,6 +207,8 @@
 				1E9DFA2E30B2F5980064A2DC /* Jobetics.app */,
 				1E9DFA3D30B2F5A00064A2DC /* JobeticsTests.xctest */,
 				1E9DFA4730B2F5A00064A2DC /* JobeticsUITests.xctest */,
+				4A0B0C0D0E0F000000000001 /* JobeticsWidgets.appex */,
+				4A0B0C0D0E0F000000000002 /* JobeticsWatch.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,16 +223,30 @@
 				1E9DFA2A30B2F5980064A2DC /* Sources */,
 				1E9DFA2B30B2F5980064A2DC /* Frameworks */,
 				1E9DFA2C30B2F5980064A2DC /* Resources */,
+				4A0B0C0D0E0F00000000001E /* Embed Foundation Extensions */,
+				4A0B0C0D0E0F00000000001F /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4A0B0C0D0E0F000000000024 /* PBXTargetDependency */,
+				4A0B0C0D0E0F000000000025 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				1E9DFA3030B2F5980064A2DC /* Jobetics */,
+				4A0B0C0D0E0F000000000003 /* Shared */,
 			);
 			name = Jobetics;
 			packageProductDependencies = (
+				1E9DFA6F30B2F8B40064A2DC /* FirebaseAILogic */,
+				1E9DFA7130B2F8B40064A2DC /* FirebaseAnalytics */,
+				1E9DFA7330B2F8B40064A2DC /* FirebaseAnalyticsCore */,
+				1E9DFA7530B2F8B40064A2DC /* FirebaseAnalyticsIdentitySupport */,
+				1E9DFA7730B2F8B40064A2DC /* FirebaseAppCheck */,
+				8DCAD89B8F33CA58C7DCF044 /* FirebaseCore */,
+				24DB671C1C2AB8F6F63A1142 /* FirebaseAuth */,
+				ACD5EE006CF4A1362AEDBAD4 /* FirebaseFirestore */,
+				467BA92ECF3C8F0A6839EE34 /* FirebaseMessaging */,
 			);
 			productName = Jobetics;
 			productReference = 1E9DFA2E30B2F5980064A2DC /* Jobetics.app */;
@@ -163,6 +298,52 @@
 			productReference = 1E9DFA4730B2F5A00064A2DC /* JobeticsUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		4A0B0C0D0E0F00000000000A /* JobeticsWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A0B0C0D0E0F00000000000E /* Build configuration list for PBXNativeTarget "JobeticsWidgets" */;
+			buildPhases = (
+				4A0B0C0D0E0F00000000000B /* Sources */,
+				4A0B0C0D0E0F00000000000C /* Frameworks */,
+				4A0B0C0D0E0F00000000000D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4A0B0C0D0E0F000000000003 /* Shared */,
+				4A0B0C0D0E0F000000000004 /* JobeticsWidgets */,
+			);
+			name = JobeticsWidgets;
+			packageProductDependencies = (
+			);
+			productName = JobeticsWidgets;
+			productReference = 4A0B0C0D0E0F000000000001 /* JobeticsWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		4A0B0C0D0E0F000000000014 /* JobeticsWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A0B0C0D0E0F000000000018 /* Build configuration list for PBXNativeTarget "JobeticsWatch" */;
+			buildPhases = (
+				4A0B0C0D0E0F000000000015 /* Sources */,
+				4A0B0C0D0E0F000000000016 /* Frameworks */,
+				4A0B0C0D0E0F000000000017 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4A0B0C0D0E0F000000000003 /* Shared */,
+				4A0B0C0D0E0F000000000005 /* JobeticsWatch */,
+			);
+			name = JobeticsWatch;
+			packageProductDependencies = (
+			);
+			productName = JobeticsWatch;
+			productReference = 4A0B0C0D0E0F000000000002 /* JobeticsWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -184,6 +365,12 @@
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = 1E9DFA2D30B2F5980064A2DC;
 					};
+					4A0B0C0D0E0F00000000000A = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					4A0B0C0D0E0F000000000014 = {
+						CreatedOnToolsVersion = 26.3;
+					};
 				};
 			};
 			buildConfigurationList = 1E9DFA2930B2F5980064A2DC /* Build configuration list for PBXProject "Jobetics" */;
@@ -192,9 +379,14 @@
 			knownRegions = (
 				en,
 				Base,
+				fr,
+				es,
 			);
 			mainGroup = 1E9DFA2530B2F5980064A2DC;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				1E9DFA6E30B2F8B40064A2DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1E9DFA2F30B2F5980064A2DC /* Products */;
 			projectDirPath = "";
@@ -203,6 +395,8 @@
 				1E9DFA2D30B2F5980064A2DC /* Jobetics */,
 				1E9DFA3C30B2F5A00064A2DC /* JobeticsTests */,
 				1E9DFA4630B2F5A00064A2DC /* JobeticsUITests */,
+				4A0B0C0D0E0F00000000000A /* JobeticsWidgets */,
+				4A0B0C0D0E0F000000000014 /* JobeticsWatch */,
 			);
 		};
 /* End PBXProject section */
@@ -223,6 +417,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1E9DFA4530B2F5A00064A2DC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A0B0C0D0E0F00000000000D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A0B0C0D0E0F000000000017 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,6 +461,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4A0B0C0D0E0F00000000000B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A0B0C0D0E0F000000000015 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -265,6 +487,16 @@
 			isa = PBXTargetDependency;
 			target = 1E9DFA2D30B2F5980064A2DC /* Jobetics */;
 			targetProxy = 1E9DFA4830B2F5A00064A2DC /* PBXContainerItemProxy */;
+		};
+		4A0B0C0D0E0F000000000024 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4A0B0C0D0E0F00000000000A /* JobeticsWidgets */;
+			targetProxy = 4A0B0C0D0E0F000000000022 /* PBXContainerItemProxy */;
+		};
+		4A0B0C0D0E0F000000000025 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4A0B0C0D0E0F000000000014 /* JobeticsWatch */;
+			targetProxy = 4A0B0C0D0E0F000000000023 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -322,13 +554,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -380,12 +613,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -395,11 +629,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Jobetics/Jobetics.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R9F43J8EC6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Jobetics/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Add your milestones and meetings to your calendar.";
+				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "Add your milestones and meetings to your calendar.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Take pictures of your work for your portfolio, or of receipts for your expenses.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Pick a client from your contacts when creating an invoice or a quote.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use Face ID to protect your invoices and accounting.";
+				INFOPLIST_KEY_NSSiriUsageDescription = "Ask Siri to show new jobs or start a focus session.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -410,9 +653,14 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.vavelinkevin.Jobetics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -427,11 +675,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Jobetics/Jobetics.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R9F43J8EC6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Jobetics/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Add your milestones and meetings to your calendar.";
+				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "Add your milestones and meetings to your calendar.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Take pictures of your work for your portfolio, or of receipts for your expenses.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Pick a client from your contacts when creating an invoice or a quote.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use Face ID to protect your invoices and accounting.";
+				INFOPLIST_KEY_NSSiriUsageDescription = "Ask Siri to show new jobs or start a focus session.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -442,9 +699,14 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.vavelinkevin.Jobetics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -462,7 +724,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R9F43J8EC6;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.vavelinkevin.JobeticsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -484,7 +746,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R9F43J8EC6;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.vavelinkevin.JobeticsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -538,6 +800,134 @@
 			};
 			name = Release;
 		};
+		4A0B0C0D0E0F00000000000F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = JobeticsWidgets/JobeticsWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R9F43J8EC6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JobeticsWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Jobetics;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.vavelinkevin.Jobetics.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4A0B0C0D0E0F000000000010 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = JobeticsWidgets/JobeticsWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R9F43J8EC6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JobeticsWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Jobetics;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.vavelinkevin.Jobetics.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4A0B0C0D0E0F000000000019 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R9F43J8EC6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Jobetics;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = fr.vavelinkevin.Jobetics;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.vavelinkevin.Jobetics.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		4A0B0C0D0E0F00000000001A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R9F43J8EC6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Jobetics;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = fr.vavelinkevin.Jobetics;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.vavelinkevin.Jobetics.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -577,7 +967,84 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		4A0B0C0D0E0F00000000000E /* Build configuration list for PBXNativeTarget "JobeticsWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A0B0C0D0E0F00000000000F /* Debug */,
+				4A0B0C0D0E0F000000000010 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4A0B0C0D0E0F000000000018 /* Build configuration list for PBXNativeTarget "JobeticsWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A0B0C0D0E0F000000000019 /* Debug */,
+				4A0B0C0D0E0F00000000001A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1E9DFA6E30B2F8B40064A2DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1E9DFA6F30B2F8B40064A2DC /* FirebaseAILogic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E9DFA6E30B2F8B40064A2DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAILogic;
+		};
+		1E9DFA7130B2F8B40064A2DC /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E9DFA6E30B2F8B40064A2DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		1E9DFA7330B2F8B40064A2DC /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E9DFA6E30B2F8B40064A2DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		1E9DFA7530B2F8B40064A2DC /* FirebaseAnalyticsIdentitySupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E9DFA6E30B2F8B40064A2DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsIdentitySupport;
+		};
+		1E9DFA7730B2F8B40064A2DC /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E9DFA6E30B2F8B40064A2DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+		24DB671C1C2AB8F6F63A1142 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E9DFA6E30B2F8B40064A2DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		467BA92ECF3C8F0A6839EE34 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E9DFA6E30B2F8B40064A2DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		8DCAD89B8F33CA58C7DCF044 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E9DFA6E30B2F8B40064A2DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		ACD5EE006CF4A1362AEDBAD4 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E9DFA6E30B2F8B40064A2DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1E9DFA2630B2F5980064A2DC /* Project object */;
 }

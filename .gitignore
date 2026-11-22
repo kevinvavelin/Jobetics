@@ -1,0 +1,68 @@
+# ─────────────────────────────────────────────────────────────
+# SECRETS — never commit. This repository is public.
+# ─────────────────────────────────────────────────────────────
+# Firebase client config (API key, project id, app id, GCM sender id).
+# Copy Config/GoogleService-Info.example.plist → Jobetics/GoogleService-Info.plist locally.
+GoogleService-Info.plist
+**/GoogleService-Info.plist
+!**/GoogleService-Info.example.plist
+
+# Local xcconfig overrides (team id, bundle prefixes, App Check debug token…)
+Config/Secrets.xcconfig
+*.local.xcconfig
+
+# App Check debug tokens, service accounts, env files
+*AppCheckDebugToken*
+*service-account*.json
+*-firebase-adminsdk-*.json
+.env
+.env.*
+!.env.example
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Signing material
+*.p12
+*.p8
+*.cer
+*.certSigningRequest
+*.mobileprovision
+*.provisionprofile
+AuthKey_*.p8
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/test_output
+fastlane/.env*
+
+# ─────────────────────────────────────────────────────────────
+# Xcode
+# ─────────────────────────────────────────────────────────────
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+DerivedData/
+build/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+timeline.xctimeline
+playground.xcworkspace
+.swiftpm/
+.build/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Full-resolution App Store screenshots (31 MB, regenerate with scripts/screenshots.sh).
+# Lightweight README previews live in docs/screenshots/.
+/Screenshots/
