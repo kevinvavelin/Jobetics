@@ -65,19 +65,19 @@ enum DemoSeed {
                 context.insert(line)
             }
         }
-        document(.invoice, "INV-2026-031", "Lumen Health", issued: -12, due: 18, status: .sent,
+        document(.invoice, "FAC-2026-0031", "Lumen Health", issued: -12, due: 18, status: .sent,
                  items: [("Design system: sprint 3", 1, 480_000), ("Component documentation", 12, 9_000)])
-        document(.invoice, "INV-2026-030", "Atlas Travel", issued: -40, due: -10, status: .overdue,
+        document(.invoice, "FAC-2026-0030", "Atlas Travel", issued: -40, due: -10, status: .overdue,
                  items: [("Discovery & interviews", 1, 160_000)])
-        document(.invoice, "INV-2026-029", "Lumen Health", issued: -42, due: -12, status: .paid,
+        document(.invoice, "FAC-2026-0029", "Lumen Health", issued: -42, due: -12, status: .paid,
                  items: [("Design system: sprint 2", 1, 480_000)])
-        document(.invoice, "INV-2026-028", "Kite Labs", issued: -70, due: -40, status: .paid,
+        document(.invoice, "FAC-2026-0028", "Kite Labs", issued: -70, due: -40, status: .paid,
                  items: [("Brand refresh", 1, 350_000), ("Icon set (24 icons)", 24, 4_500)])
-        document(.quote, "Q-2026-014", "Northwind Bank", issued: -2, due: 28, status: .accepted,
+        document(.quote, "DEV-2026-0014", "Northwind Bank", issued: -2, due: 28, status: .accepted,
                  items: [("UX audit (1 week)", 5, 72_000), ("Liquid Glass component library", 1, 590_000)])
-        document(.quote, "Q-2026-015", "Orbit Apps", issued: -1, due: 29, status: .sent,
+        document(.quote, "DEV-2026-0015", "Orbit Apps", issued: -1, due: 29, status: .sent,
                  items: [("Widget & watchOS design", 1, 420_000), ("Design QA", 8, 8_500)])
-        document(.quote, "Q-2026-013", "Ferris", issued: -15, due: 15, status: .draft,
+        document(.quote, "DEV-2026-0013", "Ferris", issued: -15, due: 15, status: .draft,
                  items: [("Pricing page redesign", 1, 260_000)])
 
         let incomes: [(Int, Int, String)] = [
@@ -88,7 +88,7 @@ enum DemoSeed {
         ]
         for (i, inc) in incomes.enumerated() {
             context.insert(LedgerEntry(date: day(inc.0), amountCents: inc.1, kind: .income, category: "Client work",
-                                       counterparty: inc.2, invoiceNumber: "INV-2026-\(String(format: "%03d", 17 + i))"))
+                                       counterparty: inc.2, invoiceNumber: "FAC-2026-\(String(format: "%04d", 17 + i))"))
         }
         let expenses: [(Int, Int, String, String)] = [
             (-320, 18_000, "Software", "Figma"), (-290, 120_000, "Equipment", "Studio display"), (-250, 18_000, "Software", "Figma"),

@@ -2,34 +2,21 @@ import SwiftUI
 
 struct JobsView: View {
     @Environment(AppRouter.self) private var router
-    @State private var layout: Layout = .list
-
-    enum Layout: String, CaseIterable { case list, calendar }
 
     var body: some View {
         @Bindable var router = router
         NavigationStack(path: $router.jobsPath) {
-            Group {
-                switch layout {
-                case .list: JobsListContent()
-                case .calendar: JobCalendarView()
-                }
-            }
-            .navigationTitle("Jobs")
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Picker("Layout", selection: $layout) {
-                        Label("List", systemImage: "list.bullet").tag(Layout.list)
-                        Label("Calendar", systemImage: "calendar").tag(Layout.calendar)
+            JobsListContent()
+                .navigationTitle("Jobs")
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        NavigationLink { WebMissionSearchView() } label: { Label("Find missions", systemImage: "sparkle.magnifyingglass") }
                     }
-                    .pickerStyle(.segmented)
-                    .frame(width: 200)
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Post a job", systemImage: "plus") { router.sheet = .postJob }
+                    }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Post a job", systemImage: "plus") { router.sheet = .postJob }
-                }
-            }
-            .navigationDestination(for: JobPost.self) { JobDetailView(job: $0) }
+                .navigationDestination(for: JobPost.self) { JobDetailView(job: $0) }
         }
     }
 }
@@ -108,8 +95,7 @@ struct JobsListContent: View {
                 .padding(.vertical, 8)
         }
         .buttonStyle(.plain)
-        .foregroundStyle(selected ? .white : .primary)
-        .glassEffect(selected ? .regular.tint(Brand.indigo).interactive() : .regular.interactive(), in: .capsule)
+        .selectableCapsule(selected)
         .sensoryFeedback(.selection, trigger: selected)
     }
 }
@@ -144,7 +130,7 @@ struct JobCard: View {
             HStack(alignment: .firstTextBaseline) {
                 Text(job.budget.formatted)
                     .font(.title3.bold())
-                    .foregroundStyle(Brand.gradient)
+                    .foregroundStyle(.tint)
                 Text(job.pricing == .hourly ? String(localized: "/ hour") : String(localized: "fixed"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -190,7 +176,7 @@ struct JobDetailView: View {
                         .foregroundStyle(job.discipline.tint)
                     Text(job.title).font(.largeTitle.bold())
                     HStack(alignment: .firstTextBaseline) {
-                        Text(job.budget.formatted).font(.title.bold()).foregroundStyle(Brand.gradient)
+                        Text(job.budget.formatted).font(.title.bold()).foregroundStyle(.tint)
                         Text(job.pricing.title).foregroundStyle(.secondary)
                     }
                 }
@@ -256,7 +242,7 @@ struct JobDetailView: View {
                         .font(.headline)
                         .frame(maxWidth: 400)
                 }
-                .buttonStyle(.glassProminent)
+                .buttonStyle(.gradientCapsule)
                 .controlSize(.large)
                 .disabled(proposalSent)
                 .padding()

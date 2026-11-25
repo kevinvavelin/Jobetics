@@ -1,14 +1,17 @@
 import SwiftUI
 
 enum AppTab: String, Hashable, CaseIterable {
-    case home, jobs, board, messages, profile
-    // iPad sidebar destinations (on iPhone they live under Profile)
-    case calendar, invoices, quotes, accounting, payouts, portfolio, admin
+    // iPhone tab bar
+    case home, missions, money, jobs, messages
+    // iPad sidebar destinations (on iPhone they're reached from Missions, Money or Profile)
+    case board, profile, calendar, invoices, quotes, expenses, clients, journal, card, web
+    case accounting, payouts, portfolio, admin
     case search
+
 }
 
 enum AppSheet: String, Identifiable {
-    case focus, postJob
+    case focus, postJob, profile
     var id: String { rawValue }
 }
 
@@ -36,9 +39,28 @@ final class AppRouter {
             } else {
                 pendingConversationID = id
             }
+        case "missions": tab = .missions
+        case "money": tab = .money
+        case "profile": sheet = .profile
         case "focus": sheet = .focus
         case "post-job": sheet = .postJob
         default: tab = .home
+        }
+    }
+
+    /// On iPhone, destinations that aren't in the user's tab bar map to the tab that hosts them.
+    func normalize(compact: Bool, available: [AppTab]) {
+        guard compact, !available.contains(tab) else { return }
+        let host: AppTab? = switch tab {
+        case .board, .clients, .calendar, .web: .missions
+        case .invoices, .quotes, .expenses, .accounting, .payouts: .money
+        default: nil
+        }
+        if let host, available.contains(host) {
+            tab = host
+        } else {
+            if [.profile, .card, .journal, .portfolio, .admin].contains(tab) { sheet = .profile }
+            tab = available.first ?? .home
         }
     }
 

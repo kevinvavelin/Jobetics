@@ -59,11 +59,8 @@ struct VerdictChips: View {
 
     var body: some View {
         FlowLayout {
-            Label("AI: \(verdict.decision.rawValue) · \(verdict.confidence.formatted(.percent.precision(.fractionLength(0))))",
-                  systemImage: "sparkles")
-                .font(.caption2.weight(.semibold))
-                .padding(.horizontal, 8).padding(.vertical, 4)
-                .background((verdict.decision == .block ? Brand.danger : Brand.warning).opacity(0.18), in: .capsule)
+            OutlineCapsule(text: "AI: \(verdict.decision.rawValue) · \(verdict.confidence.formatted(.percent.precision(.fractionLength(0))))",
+                           symbol: "sparkles", gradient: Brand.gradient(for: verdict.decision == .block ? Brand.danger : Brand.warning))
             ForEach(verdict.categories, id: \.self) { SkillChip(text: $0.title) }
         }
     }
@@ -93,7 +90,7 @@ struct ReportRow: View {
                 } label: {
                     Label("Take action", systemImage: "hammer.fill")
                 }
-                .buttonStyle(.glassProminent)
+                .buttonStyle(.gradientCapsule)
                 .tint(Brand.danger)
             }
             .controlSize(.small)
@@ -118,7 +115,7 @@ struct HeldJobRow: View {
             HStack {
                 Button("Remove", role: .destructive) { onDecision(false) }.buttonStyle(.glass)
                 Spacer()
-                Button("Approve") { onDecision(true) }.buttonStyle(.glassProminent)
+                Button("Approve") { onDecision(true) }.buttonStyle(.gradientCapsule)
             }
             .controlSize(.small)
         }

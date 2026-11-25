@@ -84,6 +84,15 @@ nonisolated enum LinkGuard {
         "zip", "mov", "top", "xyz", "click", "gq", "tk", "ml", "cf", "ga", "work", "country", "loan", "rest",
     ]
 
+    /// Parses user-typed text into an https URL ("malt.fr/job" → https://malt.fr/job). Nil if it isn't a URL.
+    static func normalized(_ text: String) -> URL? {
+        var trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, !trimmed.contains(" ") else { return nil }
+        if !trimmed.lowercased().hasPrefix("http://") && !trimmed.lowercased().hasPrefix("https://") { trimmed = "https://" + trimmed }
+        guard let url = URL(string: trimmed), url.host()?.contains(".") == true else { return nil }
+        return url
+    }
+
     static func assess(_ url: URL) -> Assessment {
         var reasons: [Reason] = []
         let scheme = url.scheme?.lowercased() ?? ""

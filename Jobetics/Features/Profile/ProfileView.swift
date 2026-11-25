@@ -4,6 +4,9 @@ import SwiftUI
 /// On iPhone, Profile is also the home of the business tools (invoices, quotes, accounting…),
 /// which have their own sidebar entries on iPad.
 struct ProfileView: View {
+    /// Presented as a sheet from Today's avatar on iPhone.
+    var isPresented = false
+    @Environment(\.dismiss) private var dismiss
     @Environment(MarketplaceStore.self) private var store
     @Environment(AuthService.self) private var auth
     @Environment(AppRouter.self) private var router
@@ -15,18 +18,13 @@ struct ProfileView: View {
             List {
                 Section { header }
 
-                Section("Business") {
-                    NavigationLink { JobCalendarView() } label: { Label("Calendar", systemImage: "calendar") }
-                    NavigationLink { BillingListView(kind: .invoice) } label: {
-                        LabeledContent {
-                            let due = invoices.filter { $0.status == .sent || $0.status == .overdue }.count
-                            if due > 0 { Text("\(due) awaiting") }
-                        } label: { Label("Invoices", systemImage: "doc.text.fill") }
-                    }
-                    NavigationLink { BillingListView(kind: .quote) } label: { Label("Quotes", systemImage: "doc.text.magnifyingglass") }
-                    NavigationLink { AccountingView() } label: { Label("Accounting", systemImage: "chart.bar.xaxis") }
-                    NavigationLink { PayoutsView() } label: { Label("Payouts", systemImage: "banknote.fill") }
+                Section("You") {
+                    NavigationLink { MyCardView() } label: { Label("My card", systemImage: "qrcode") }
+                    NavigationLink { JournalView() } label: { Label("Journal", systemImage: "book.closed.fill") }
                     NavigationLink { PortfolioView() } label: { Label("Portfolio", systemImage: "square.grid.2x2.fill") }
+                    NavigationLink { WorkspacesView() } label: { Label("Workspaces", systemImage: "building.2.fill") }
+                    NavigationLink { BusinessSettingsView() } label: { Label("Business settings", systemImage: "building.columns.fill") }
+                    NavigationLink { TabBarSettingsView() } label: { Label("Tab bar", systemImage: "dock.rectangle") }
                 }
 
                 Section("Profile") {
@@ -65,6 +63,11 @@ struct ProfileView: View {
                 }
             }
             .navigationTitle("Profile")
+            .toolbar {
+                if isPresented {
+                    ToolbarItem(placement: .confirmationAction) { Button("Done", role: .confirm) { dismiss() } }
+                }
+            }
             .confirmationDialog("Delete your account?", isPresented: $confirmsDeletion, titleVisibility: .visible) {
                 Button("Delete account", role: .destructive) {
                     Task {

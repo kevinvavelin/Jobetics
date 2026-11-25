@@ -105,12 +105,32 @@ final class Meeting {
 }
 
 enum BillingKind: String, Codable, CaseIterable, Identifiable {
-    case quote, invoice
+    case quote, invoice, creditNote
     var id: String { rawValue }
-    var title: String { self == .quote ? String(localized: "Quote") : String(localized: "Invoice") }
-    var plural: String { self == .quote ? String(localized: "Quotes") : String(localized: "Invoices") }
-    var prefix: String { self == .quote ? "Q" : "INV" }
-    var symbol: String { self == .quote ? "doc.text.magnifyingglass" : "doc.text.fill" }
+
+    var title: String {
+        switch self {
+        case .quote: String(localized: "Quote")
+        case .invoice: String(localized: "Invoice")
+        case .creditNote: String(localized: "Credit note")
+        }
+    }
+
+    var plural: String {
+        switch self {
+        case .quote: String(localized: "Quotes")
+        case .invoice: String(localized: "Invoices")
+        case .creditNote: String(localized: "Credit notes")
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .quote: "doc.text.magnifyingglass"
+        case .invoice: "doc.text.fill"
+        case .creditNote: "arrow.uturn.backward.circle"
+        }
+    }
 }
 
 enum BillingStatus: String, Codable, CaseIterable, Identifiable {
@@ -154,6 +174,12 @@ final class BillingDocument {
     /// Percent, e.g. 20 for 20% VAT.
     var taxRate: Double = 20
     var notes: String = ""
+    var paidAt: Date?
+    var sentAt: Date?
+    var remindersSent: Int = 0
+    var missionTitle: String = ""
+    /// For a credit note: the invoice it cancels. For an invoice: the credit note that cancelled it.
+    var relatedNumber: String?
     @Relationship(deleteRule: .cascade, inverse: \LineItem.document) var lineItems: [LineItem]? = []
 
     init(kind: BillingKind, number: String, clientName: String, clientEmail: String = "",
@@ -183,7 +209,12 @@ final class BillingDocument {
     var tax: Money { Money(cents: Int((Double(subtotal.cents) * taxRate / 100).rounded()), currency: currency) }
     var total: Money { subtotal + tax }
 
-    var isOverdue: Bool { kind == .invoice && status == .sent && dueDate < .now }
+    var isOverdue: Bool { kind == .invoice && (status == .sent || status == .overdue) && dueDate < .now }
+    var daysLate: Int { isOverdue ? max(0, Calendar.current.dateComponents([.day], from: dueDate, to: .now).day ?? 0) : 0 }
+    /// Issued invoices are legal records: they can't be deleted, only cancelled by a credit note.
+    var isDeletable: Bool { kind == .quote || status == .draft }
+    var isCancelled: Bool { kind == .invoice && relatedNumber != nil }
+    var displayNumber: String { number.isEmpty ? String(localized: "Draft \(kind.title.lowercased())") : number }
 }
 
 @Model
@@ -269,5 +300,7 @@ enum BusinessSchema {
     static let models: [any PersistentModel.Type] = [
         Project.self, BoardTask.self, Meeting.self, BillingDocument.self,
         LineItem.self, LedgerEntry.self, PortfolioItem.self,
+        Client.self, Mission.self, WorkLog.self, ActivityReportRecord.self,
+        Expense.self, Workspace.self, JournalEntry.self,
     ]
 }

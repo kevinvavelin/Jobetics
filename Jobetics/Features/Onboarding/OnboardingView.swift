@@ -94,7 +94,7 @@ struct OnboardingView: View {
 
     private func feature(_ symbol: String, _ text: LocalizedStringKey) -> some View {
         Label { Text(text).font(.subheadline.weight(.semibold)) } icon: {
-            Image(systemName: symbol).foregroundStyle(Brand.gradient)
+            Image(systemName: symbol).foregroundStyle(.tint)
         }
     }
 }

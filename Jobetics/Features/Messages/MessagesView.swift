@@ -38,7 +38,12 @@ struct ConversationRow: View {
     var body: some View {
         let other = conversation.otherParticipant(than: store.me)
         let unread = conversation.unread[store.me] ?? 0
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
+            // Messages-style unread indicator: a leading blue dot.
+            Circle()
+                .fill(unread > 0 ? AnyShapeStyle(.tint) : AnyShapeStyle(.clear))
+                .frame(width: 10, height: 10)
+                .accessibilityHidden(true)
             AnonymousAvatar(seed: other, symbol: other.hasPrefix("emp") ? "building.2.fill" : "person.fill", size: 50)
             VStack(alignment: .leading, spacing: 3) {
                 HStack {
@@ -54,18 +59,12 @@ struct ConversationRow: View {
                 HStack(alignment: .top) {
                     Text(conversation.lastMessage).font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
                     Spacer()
-                    if unread > 0 {
-                        Text(unread, format: .number)
-                            .font(.caption2.bold())
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 7)
-                            .padding(.vertical, 3)
-                            .background(Brand.gradient, in: .capsule)
-                    }
                 }
             }
         }
         .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(unread > 0 ? Text("\(unread) unread") : Text(""))
     }
 }
 
@@ -132,7 +131,7 @@ struct ChatView: View {
         .sheet(item: $reported) { message in
             ReportSheet(kind: .message, targetId: message.id, ownerId: message.senderId, excerpt: message.text)
         }
-        .sheet(isPresented: $showsContact) { ContactCard(contact: contact) }
+        .sheet(isPresented: $showsContact) { PrivateContactSheet(contact: contact) }
         .confirmationDialog("Block this member?", isPresented: $confirmsBlock, titleVisibility: .visible) {
             Button("Block", role: .destructive) {
                 Task { try? await store.block(other); dismiss() }
@@ -147,7 +146,7 @@ struct ChatView: View {
         HStack(spacing: 12) {
             Image(systemName: unlocked ? "lock.open.fill" : "lock.fill")
                 .font(.title3)
-                .foregroundStyle(unlocked ? AnyShapeStyle(Brand.positive) : AnyShapeStyle(Brand.gradient))
+                .foregroundStyle(unlocked ? AnyShapeStyle(Brand.positive) : AnyShapeStyle(.tint))
             VStack(alignment: .leading, spacing: 2) {
                 Text(unlocked ? "Contact details unlocked" : "Contact details are private")
                     .font(.subheadline.weight(.semibold))
@@ -156,7 +155,7 @@ struct ChatView: View {
             Spacer(minLength: 0)
             if let action = bannerAction {
                 Button(action.0) { action.1() }
-                    .buttonStyle(.glassProminent)
+                    .buttonStyle(.gradientCapsule)
                     .controlSize(.small)
             } else if unlocked {
                 Button("View") { showsContact = true }.buttonStyle(.glass).controlSize(.small)
@@ -201,7 +200,7 @@ struct ChatView: View {
                     Button(action: send) {
                         Image(systemName: "arrow.up").font(.body.weight(.bold)).frame(width: 30, height: 30)
                     }
-                    .buttonStyle(.glassProminent)
+                    .buttonStyle(.gradientCapsule)
                     .buttonBorderShape(.circle)
                     .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .accessibilityLabel("Send")
@@ -240,7 +239,7 @@ struct MessageBubble: View {
                     .padding(.horizontal, 14)
                     .padding(.vertical, 9)
                     .foregroundStyle(isMine ? .white : .primary)
-                    .background(isMine ? AnyShapeStyle(Brand.gradient) : AnyShapeStyle(Color(.secondarySystemBackground)),
+                    .background(isMine ? AnyShapeStyle(.tint) : AnyShapeStyle(Color(.secondarySystemBackground)),
                                 in: .rect(cornerRadius: 20, style: .continuous))
                 HStack(spacing: 4) {
                     if message.wasRedacted { Image(systemName: "eye.slash.fill") }
@@ -268,7 +267,7 @@ struct MessageBubble: View {
     }
 }
 
-struct ContactCard: View {
+struct PrivateContactSheet: View {
     var contact: PrivateContact?
     @Environment(\.dismiss) private var dismiss
 

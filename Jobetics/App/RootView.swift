@@ -34,55 +34,69 @@ struct RootView: View {
     }
 }
 
-/// iPhone: simple tab bar (Home, Jobs, Board, Messages, Profile). Business tools live under Profile.
-/// iPad: the same tabs become a sidebar with a full Business section, Search and Admin.
+/// iPhone: the user's own tab bar (Today, Missions, Money, Jobs, Messages by default; editable in Profile ▸ Tab bar).
+/// iPad: a sidebar with the full suite, customizable with the system sidebar editing.
 struct MainTabView: View {
     @Environment(MarketplaceStore.self) private var store
     @Environment(AppRouter.self) private var router
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @AppStorage(TabPreferences.storageKey) private var compactTabsRaw = TabPreferences.encode(TabPreferences.defaultTabs)
+    @AppStorage("tabs.sidebar.customization") private var customization: TabViewCustomization
+
+    private var compactTabs: [AppTab] { TabPreferences.decode(compactTabsRaw) }
 
     var body: some View {
         @Bindable var router = router
         TabView(selection: $router.tab) {
-            Tab("Home", systemImage: "house.fill", value: AppTab.home) { HomeView() }
-            Tab("Jobs", systemImage: "briefcase.fill", value: AppTab.jobs) { JobsView() }
-            Tab("Board", systemImage: "rectangle.split.3x1.fill", value: AppTab.board) { BoardView() }
-            Tab("Messages", systemImage: "bubble.left.and.text.bubble.right.fill", value: AppTab.messages) { MessagesView() }
-                .badge(store.unreadCount)
-            Tab("Profile", systemImage: "person.crop.circle.fill", value: AppTab.profile) { ProfileView() }
-
             if sizeClass == .regular {
-            TabSection("Business") {
-                Tab("Calendar", systemImage: "calendar", value: AppTab.calendar) { NavigationStack { JobCalendarView() } }
-                Tab("Invoices", systemImage: "doc.text.fill", value: AppTab.invoices) { NavigationStack { BillingListView(kind: .invoice) } }
-                Tab("Quotes", systemImage: "doc.text.magnifyingglass", value: AppTab.quotes) { NavigationStack { BillingListView(kind: .quote) } }
-                Tab("Accounting", systemImage: "chart.bar.xaxis", value: AppTab.accounting) { NavigationStack { AccountingView() } }
-                Tab("Payouts", systemImage: "banknote.fill", value: AppTab.payouts) { NavigationStack { PayoutsView() } }
-                Tab("Portfolio", systemImage: "square.grid.2x2.fill", value: AppTab.portfolio) { NavigationStack { PortfolioView() } }
-            }
-            .defaultVisibility(.hidden, for: .tabBar)
-            }
-
-            if store.isAdmin && sizeClass == .regular {
-                TabSection("Administration") {
-                    Tab("Moderation", systemImage: "checkmark.shield.fill", value: AppTab.admin) { NavigationStack { ModerationQueueView() } }
+                ForEach(TabPreferences.defaultTabs, id: \.self) { tab in
+                    Tab(tab.title, systemImage: tab.symbol, value: tab) { tab.root }
+                        .badge(tab == .messages ? store.unreadCount : 0)
+                        .customizationID(tab.rawValue)
                 }
-                .defaultVisibility(.hidden, for: .tabBar)
-            }
-
-            if sizeClass == .regular {
+                section("Work", [.calendar, .board, .clients, .journal, .web])
+                section("Money", [.invoices, .quotes, .expenses, .accounting, .payouts])
+                section("You", [.profile, .card, .portfolio])
+                if store.isAdmin { section("Administration", [.admin]) }
                 Tab(value: AppTab.search, role: .search) { SearchView() }
+                    .customizationID("search")
+            } else {
+                ForEach(compactTabs, id: \.self) { tab in
+                    Tab(tab.title, systemImage: tab.symbol, value: tab) { tab.root }
+                        .badge(tab == .messages ? store.unreadCount : 0)
+                }
             }
         }
         .tabViewStyle(.sidebarAdaptable)
+        .tabViewCustomization($customization)
         .defaultAdaptableTabBarPlacement(.sidebar)
         .tabBarMinimizeBehavior(.onScrollDown)
         .tabViewBottomAccessory { NextUpAccessory() }
+        .onAppear(perform: normalize)
+        .onChange(of: sizeClass) { normalize() }
+        .onChange(of: router.tab) { normalize() }
+        .onChange(of: compactTabsRaw) { normalize() }
         .sheet(item: $router.sheet) { sheet in
             switch sheet {
             case .focus: FocusView()
             case .postJob: PostJobView()
+            case .profile: ProfileView(isPresented: true)
             }
         }
+    }
+
+    private func section(_ title: LocalizedStringKey, _ tabs: [AppTab]) -> some TabContent<AppTab> {
+        TabSection(title) {
+            ForEach(tabs, id: \.self) { tab in
+                Tab(tab.title, systemImage: tab.symbol, value: tab) { tab.root }
+                    .customizationID(tab.rawValue)
+            }
+        }
+        .defaultVisibility(.hidden, for: .tabBar)
+        .customizationID("section-\(tabs.first?.rawValue ?? "")")
+    }
+
+    private func normalize() {
+        router.normalize(compact: sizeClass == .compact, available: compactTabs)
     }
 }

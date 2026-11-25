@@ -27,15 +27,18 @@ final class AppEnvironment {
     let router = AppRouter()
     let browser = SafeBrowser()
     let focus = FocusTimer()
+    let settings: SettingsStore
 
     private init() {
         let demo = LaunchOptions.isDemo
         container = Self.makeContainer(demo: demo)
+        settings = demo ? SettingsStore(defaults: UserDefaults(suiteName: "demo") ?? .standard, syncsWithICloud: false) : SettingsStore()
         let backend: MarketplaceBackend = demo ? DemoBackend() : FirestoreBackend()
         store = MarketplaceStore(backend: backend, moderation: ModerationService(isEnabled: !demo))
         auth = AuthService(demo: demo)
         if demo {
             DemoSeed.seedIfNeeded(container.mainContext)
+            FreelanceSeed.seedIfNeeded(container.mainContext, settings: settings)
             focus.loadDemo()
         }
         if let tab = LaunchOptions.value(after: "-tab").flatMap(AppTab.init(rawValue:)) { router.tab = tab }

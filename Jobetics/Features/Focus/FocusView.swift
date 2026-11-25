@@ -46,8 +46,7 @@ struct FocusView: View {
                         Text(phase.title).font(.subheadline.weight(.semibold)).padding(.horizontal, 12).padding(.vertical, 8)
                     }
                     .buttonStyle(.plain)
-                    .foregroundStyle(focus.phase == phase ? .white : .primary)
-                    .glassEffect(focus.phase == phase ? .regular.tint(Brand.indigo).interactive() : .regular.interactive(), in: .capsule)
+                    .selectableCapsule(focus.phase == phase)
                 }
             }
         }

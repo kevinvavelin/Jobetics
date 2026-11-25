@@ -1,7 +1,7 @@
-<p align="center"><img src="AppIcon.icon/Assets/Glossy%20Blue-Purple%20Growth%20Loop%20Logo.png" width="120" alt="Jobetics icon"></p>
+<p align="center"><img src="jobetics_logo.png" width="140" alt="Jobetics logo"></p>
 
 <h1 align="center">Jobetics</h1>
-<p align="center"><b>Paid jobs. Fair clients. Your freelance business, in one place.</b><br>
+<p align="center"><b>The freelance companion: missions, time, travel and money, calmly in one place.</b><br>
 iPhone · iPad · Apple Watch · Widgets — iOS 26+, built with SwiftUI & Liquid Glass. Developed in public.</p>
 
 <p align="center">
@@ -12,6 +12,26 @@ iPhone · iPad · Apple Watch · Widgets — iOS 26+, built with SwiftUI & Liqui
 </p>
 
 ## Features
+
+### Freelance ERP
+
+| | |
+|---|---|
+| **Today** | Check in where you work (home, coworking, client site, train), log a full or half day in one tap, see when to leave for the client, what to set aside, and a gentle note when the week gets too long. |
+| **Missions** | Long and short missions, daily rate, hourly or fixed price, with effective daily rate. Pipeline of leads (lead → in talks → quote sent → won). Calm warning weeks before a long mission ends. |
+| **Time & activity reports** | Week strip: tap for full day, half day or off; touch and hold for on site. Monthly activity report (CRA) signed by the client with PencilKit, then locked and invoiced in one tap. |
+| **Travel mode** | Apple Maps commute (car, transit, train, bike, walk), leave-by time, mileage on the official French scale (barème kilométrique, CV, electric +20 %), travel fees billed flat, at cost, or included. |
+| **Quotes & invoices** | Legal French invoices: gapless yearly numbering (`FAC-2026-0042`) assigned at issue, SIRET, art. 293 B, late penalties and €40 indemnity. Issued invoices can't be deleted, only cancelled by a credit note. Reminders drafted on device. |
+| **Money** | Amount to set aside this quarter, micro-entreprise and VAT thresholds with 80 %/95 % alerts, 6-month cash-flow forecast, daily rate calculator from the net income you want. |
+| **Expenses** | VisionKit receipt scanning and on-device Vision OCR (amount, VAT, date, category); rebillable expenses flow into the mission's next invoice. |
+| **Clients & sharing** | Import clients from Contacts, call, Message, WhatsApp or Mail with a prefilled progress update. Share work anywhere with the share sheet. |
+| **My card** | vCard QR code (scan with any camera to add the contact), vCard sharing by AirDrop, Messages or WhatsApp, and an Apple Wallet pass signed by the backend. |
+| **Journal** | What you did, the energy it took and who it helped: a streak, a 30-day energy trend, and any entry turned into a LinkedIn post of 500 characters max, drafted on device with Apple Intelligence. |
+| **Find missions** | Searches public job APIs (Remotive, Jobicy, Himalayas), and Google Programmable Search or Brave Search with your own key (stored in the Keychain) across Malt, Free-Work and LinkedIn. Each listing is parsed into rate (with daily equivalent vs. your target), contract type, location, skills match and a readable description; save it as a lead in one tap. Apply always opens the original listing, credited to its source. |
+| **Siri & Shortcuts** | "Log a day in Jobetics", "Add an expense", "How much am I owed?", "Start focus". |
+| **Your tab bar** | Pick and order up to five tabs on iPhone (Calendar, Journal, Invoices…); customizable sidebar on iPad. |
+
+### Marketplace
 
 | | |
 |---|---|
@@ -28,8 +48,8 @@ iPhone · iPad · Apple Watch · Widgets — iOS 26+, built with SwiftUI & Liqui
 | **Admin** | Moderation queue (reports + jobs held by AI), actions applied by Cloud Functions; admin via Firebase custom claim. |
 | **Languages** | English, French, Spanish. |
 
-On **iPhone** the app stays simple: Home, Jobs (list/calendar), Board, Messages, Profile, with business tools under Profile.
-On **iPad** the sidebar exposes the full suite: Calendar, Invoices, Quotes, Accounting, Payouts, Portfolio, Search and Moderation.
+On **iPhone** the default tabs follow the day: Today, Missions, Money, Jobs, Messages, and Profile is the avatar on Today. Every tab is the user's choice.
+On **iPad** the sidebar exposes the full suite: an Apple Calendar-style month view, Board, Clients, Journal, Invoices, Quotes, Expenses, Accounting, Payouts, My card, Portfolio, Search and Moderation.
 
 ## Screenshots
 
@@ -124,10 +144,16 @@ This repository is public. Nothing in it grants access to the Firebase project:
 ```
 Jobetics/            iOS & iPadOS app
   App/               entry point, environment (Firebase or demo), router, adaptive TabView
-  Models/            Marketplace (Codable, Firestore) · Business (SwiftData + CloudKit)
+  Domain/            pure, unit-tested rules: daily rate, mileage & travel fees, numbering, taxes &
+                     thresholds, activity reports, cash flow, sharing (vCard, LinkedIn, WhatsApp)
+  Intents/           App Intents & App Shortcuts (Siri, Shortcuts, Spotlight)
+  Models/            Marketplace (Codable, Firestore) · Business & Freelance (SwiftData + CloudKit)
+                     · BusinessSettings (iCloud key-value store)
   Services/          Backend (protocol, Firestore, Demo, Store) · Moderation (Gemini, ContentGuard)
-                     Security (LinkGuard, SafeBrowser) · Platform (Auth, Push, FocusTimer)
-  Features/          Home, Jobs, Board, Messages, Profile, Business, Focus, Search, Admin, Onboarding
+                     Security (LinkGuard, SafeBrowser) · Platform (Auth, Push, FocusTimer, Commute/MapKit,
+                     ReceiptScanner/Vision, WritingAssistant/Foundation Models, Wallet, QR, reminders)
+  Features/          Home (Today), Missions, Money, Clients, Journal, Card, Discover, Jobs, Board,
+                     Messages, Profile, Business, Focus, Search, Admin, Onboarding
 Shared/              Brand, score engine, Pomodoro model, App Group store, intents, String Catalog
 JobeticsWidgets/     WidgetKit: jobs, focus, motivation, control, Live Activity
 JobeticsWatch/       watchOS companion: Pomodoro, motivation, score
@@ -138,8 +164,20 @@ scripts/             screenshots.sh (App Store screenshots from demo data)
 
 The UI uses standard adaptive containers (`TabView(.sidebarAdaptable)`, size classes, `containerRelativeFrame`), which Apple says adapt automatically to each display. Fold-aware APIs (`onHingeChange`, `ArrangementView`) need the iOS 27.1 SDK (Xcode 27.1) and will be adopted behind `#if compiler` checks once the project moves to it.
 
+## Tests
+
+```bash
+xcodebuild test -project Jobetics.xcodeproj -scheme Jobetics \
+  -destination "platform=iOS Simulator,name=iPhone 17 Pro" -only-testing:JobeticsTests
+```
+
+Swift Testing covers the domain rules (rates, mileage, numbering, thresholds, penalties, activity reports, cash flow, receipts, sharing, reminders, mission earnings); UI tests cover the Today, Missions and Money flows on demo data. Tax rates, thresholds and the mileage scale are data editable in Business settings: check them against urssaf.fr and impots.gouv.fr each year.
+
 ## Roadmap
 
+- Factur-X e-invoicing (French reform, 2026–2027)
+- Widgets for days billed, unpaid total and amount to set aside; commute Live Activity on on-site days
+- Focus filters per workspace; geofenced check-in at client sites
 - Payments & escrow (Stripe Connect) so every job is paid through the platform
 - Calendar sync (EventKit) and meeting check-ins feeding the punctuality score
 - Remote Config for the Gemini model name and moderation thresholds

@@ -28,6 +28,7 @@ struct JobeticsApp: App {
                 .environment(environment.router)
                 .environment(environment.browser)
                 .environment(environment.focus)
+                .environment(environment.settings)
                 .safeBrowsing(environment.browser)
                 .onOpenURL { environment.router.handle($0, store: environment.store) }
                 .tint(Brand.indigo)

@@ -125,7 +125,7 @@ struct LinkWarningView: View {
                     Button(action: onCancel) {
                         Text(isBlocked ? "Close" : "Go back to safety").frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.glassProminent)
+                    .buttonStyle(.gradientCapsule)
                     .controlSize(.large)
 
                     if !isBlocked {

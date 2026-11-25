@@ -9,11 +9,16 @@ struct BoardView: View {
     @State private var selectedID: PersistentIdentifier?
     @State private var newTaskStatus: TaskStatus?
     @State private var showsNewProject = false
+    /// Pushed inside another navigation stack (Missions on iPhone).
+    var embedded = false
 
     private var project: Project? { projects.first { $0.persistentModelID == selectedID } ?? projects.first }
 
     var body: some View {
-        NavigationStack {
+        if embedded { content } else { NavigationStack { content } }
+    }
+
+    private var content: some View {
             VStack(spacing: 0) {
                 projectPicker
                 if let project {
@@ -22,7 +27,7 @@ struct BoardView: View {
                     ContentUnavailableView {
                         Label("No projects yet", systemImage: "rectangle.split.3x1")
                     } actions: {
-                        Button("New project") { showsNewProject = true }.buttonStyle(.glassProminent)
+                        Button("New project") { showsNewProject = true }.buttonStyle(.gradientCapsule)
                     }
                 }
             }
@@ -38,7 +43,6 @@ struct BoardView: View {
                 if let project { NewTaskSheet(project: project, status: status) }
             }
             .sheet(isPresented: $showsNewProject) { NewProjectSheet() }
-        }
     }
 
     private var projectPicker: some View {
@@ -56,8 +60,7 @@ struct BoardView: View {
                                 .padding(.vertical, 8)
                         }
                         .buttonStyle(.plain)
-                        .foregroundStyle(selected ? .white : .primary)
-                        .glassEffect(selected ? .regular.tint(Color.named(p.colorName)).interactive() : .regular.interactive(), in: .capsule)
+                        .selectableCapsule(selected, gradient: Brand.gradient(for: Color.named(p.colorName)))
                     }
                 }
                 .padding(.horizontal)

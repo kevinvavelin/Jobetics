@@ -13,6 +13,12 @@ struct HomeView: View {
             .background(Color(.systemGroupedBackground))
             .navigationTitle(greeting)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { router.sheet = .profile } label: {
+                        AnonymousAvatar(seed: store.me, symbol: store.profile?.discipline.symbol ?? "person.fill", size: 32)
+                    }
+                    .accessibilityLabel("Profile")
+                }
                 if store.isFreelancer {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
@@ -30,6 +36,7 @@ struct HomeView: View {
                 }
             }
             .navigationDestination(for: JobPost.self) { JobDetailView(job: $0) }
+            .navigationDestination(for: Mission.self) { MissionDetailView(mission: $0) }
             .refreshable { await store.load() }
         }
     }
@@ -55,21 +62,32 @@ struct FreelancerHomeView: View {
     @Query(filter: #Predicate<BillingDocument> { $0.kindRaw == "invoice" }) private var invoices: [BillingDocument]
     @Query(sort: \LedgerEntry.date, order: .reverse) private var ledger: [LedgerEntry]
     @Query(filter: #Predicate<Project> { !$0.isArchived }) private var projects: [Project]
+    @Query private var logs: [WorkLog]
+    @Environment(SettingsStore.self) private var settings
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 if sizeClass == .regular {
                     HStack(alignment: .top, spacing: 20) {
-                        VStack(spacing: 20) { MotivationCard(); stats }
-                        if let profile = store.profile { ScoreCard(score: profile.score, signals: profile.signals) }
+                        VStack(spacing: 20) { MotivationCard(); stats; MeaningCard() }
+                        VStack(spacing: 20) { TodayCard(); RunwayCard(); WellbeingCard() }
                     }
                 } else {
                     MotivationCard()
-                    if let profile = store.profile { ScoreCard(score: profile.score, signals: profile.signals) }
+                    TodayCard()
+                    RunwayCard()
+                    WellbeingCard()
                     stats
+                    MeaningCard()
                 }
                 UpNextSection()
+                if let profile = store.profile {
+                    VStack(alignment: .leading, spacing: 12) {
+                        SectionHeader("Your reputation")
+                        ScoreCard(score: profile.score, signals: profile.signals)
+                    }
+                }
                 matchedJobs
             }
             .padding()
@@ -82,12 +100,15 @@ struct FreelancerHomeView: View {
     private var stats: some View {
         let monthStart = Calendar.current.dateInterval(of: .month, for: .now)?.start ?? .now
         let earned = ledger.filter { $0.kind == .income && $0.date >= monthStart }.reduce(0) { $0 + $1.amountCents }
-        let outstanding = invoices.filter { $0.status == .sent || $0.status == .overdue }.reduce(0) { $0 + $1.total.cents }
+        let outstanding = invoices.filter { ($0.status == .sent || $0.status == .overdue) && !$0.isCancelled }.reduce(0) { $0 + $1.total.cents }
+        let daysThisMonth = logs.filter { $0.date >= monthStart }.reduce(0) { $0 + $1.days }
+        let setAside = TaxMath.setAside(paymentCents: earned, contributionRate: settings.settings.contributionRate,
+                                        incomeTaxRate: settings.settings.incomeTaxRate)
         return LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
-            StatTile(title: "Earned this month", value: Money(cents: earned).formatted, symbol: "eurosign.circle.fill", tint: Brand.positive)
+            StatTile(title: "Days billed this month", value: daysThisMonth.formatted(), symbol: "calendar", tint: Brand.blue)
             StatTile(title: "Awaiting payment", value: Money(cents: outstanding).formatted, symbol: "hourglass", tint: Brand.warning)
-            StatTile(title: "Active projects", value: projects.count.formatted(), symbol: "folder.fill", tint: Brand.blue)
-            StatTile(title: "Focus today", value: "\(focus.completedToday)/\(focus.settings.dailyGoal)", symbol: "timer", tint: Brand.violet)
+            StatTile(title: "Earned this month", value: Money(cents: earned).formatted, symbol: "eurosign.circle.fill", tint: Brand.positive)
+            StatTile(title: "To set aside", value: Money(cents: setAside).formatted, symbol: "building.columns.fill", tint: Brand.violet)
         }
     }
 
@@ -171,7 +192,7 @@ struct ScoreCard: View {
                             .foregroundStyle(.secondary)
                         Label(score.tier.title, systemImage: score.tier.symbol)
                             .font(.title3.bold())
-                            .foregroundStyle(Brand.gradient)
+                            .foregroundStyle(.tint)
                         Text(ScoreDetailView.headline(for: score))
                             .font(.footnote)
                             .foregroundStyle(.secondary)
@@ -262,7 +283,7 @@ struct EmployerHomeView: View {
                     HStack(spacing: 14) {
                         Image(systemName: "eye.slash.fill")
                             .font(.title2)
-                            .foregroundStyle(Brand.gradient)
+                            .foregroundStyle(.tint)
                         Text("Candidates are anonymous: you see skills and reputation. Names and contact details are shared only when you both accept.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
@@ -275,7 +296,7 @@ struct EmployerHomeView: View {
                     } description: {
                         Text("Post a paid job and we'll recommend matching freelancers.")
                     } actions: {
-                        Button("Post a job") { router.sheet = .postJob }.buttonStyle(.glassProminent)
+                        Button("Post a job") { router.sheet = .postJob }.buttonStyle(.gradientCapsule)
                     }
                 }
 
@@ -308,7 +329,7 @@ struct EmployerHomeView: View {
             Button { router.sheet = .postJob } label: {
                 Label("Post a job", systemImage: "plus").font(.headline).padding(.horizontal, 8)
             }
-            .buttonStyle(.glassProminent)
+            .buttonStyle(.gradientCapsule)
             .controlSize(.large)
             .padding(.bottom, 8)
         }
@@ -403,7 +424,7 @@ struct CandidateCard: View {
                         requested = true
                     }
                 }
-                .buttonStyle(.glassProminent)
+                .buttonStyle(.gradientCapsule)
                 .disabled(requested)
             }
             .controlSize(.small)
@@ -423,7 +444,7 @@ struct ScoreDetailView: View {
             Section {
                 VStack(spacing: 12) {
                     ScoreRing(score: score.overall, lineWidth: 18).frame(width: 200, height: 200)
-                    Label(score.tier.title, systemImage: score.tier.symbol).font(.title2.bold()).foregroundStyle(Brand.gradient)
+                    Label(score.tier.title, systemImage: score.tier.symbol).font(.title2.bold()).foregroundStyle(.tint)
                     Text(Self.headline(for: score)).font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
                 }
                 .frame(maxWidth: .infinity)
@@ -495,7 +516,7 @@ struct NextUpAccessory: View {
         Button { router.sheet = .focus } label: {
             HStack(spacing: 10) {
                 Image(systemName: focus.session.isIdle ? "timer" : focus.phase.symbol)
-                    .foregroundStyle(Brand.gradient)
+                    .foregroundStyle(.tint)
                     .symbolEffect(.pulse, isActive: focus.session.isRunning)
                 if let end = focus.session.endDate {
                     VStack(alignment: .leading, spacing: 0) {

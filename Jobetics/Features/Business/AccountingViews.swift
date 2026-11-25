@@ -154,7 +154,7 @@ struct PayoutsView: View {
                 let total = payouts.reduce(0) { $0 + $1.amountCents }
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Received in the last 12 months").font(.subheadline).foregroundStyle(.secondary)
-                    Text(Money(cents: total).formatted).font(.largeTitle.bold()).foregroundStyle(Brand.gradient)
+                    Text(Money(cents: total).formatted).font(.largeTitle.bold()).foregroundStyle(.tint)
                     Text("Set aside for taxes: \(Money(cents: Int(Double(total) * taxRate / 100)).formatted)")
                         .font(.footnote).foregroundStyle(.secondary)
                     Chart(months.reversed(), id: \.month) { month in

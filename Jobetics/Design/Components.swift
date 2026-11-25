@@ -71,7 +71,7 @@ struct ScoreRing: View {
                         .minimumScaleFactor(0.01)
                         .contentTransition(.numericText(value: animatedProgress))
                     Text("/ 100")
-                        .font(.system(size: 60, weight: .semibold, design: .rounded))
+                        .font(.system(size: 44, weight: .medium, design: .rounded))
                         .minimumScaleFactor(0.01)
                         .foregroundStyle(onBrand ? .white.opacity(0.75) : .secondary)
                 }
@@ -118,6 +118,94 @@ struct MetricBar: View {
 
 // MARK: - Small pieces
 
+/// Selectable capsule (filters, workspaces, projects): Liquid Glass at rest; when selected, a gradient
+/// outline and gradient label instead of a filled tint, which keeps the glass light and readable.
+struct SelectableCapsule: ViewModifier {
+    var selected: Bool
+    var gradient: LinearGradient = Brand.gradient
+
+    func body(content: Content) -> some View {
+        content
+            .foregroundStyle(selected ? AnyShapeStyle(gradient) : AnyShapeStyle(.primary))
+            .glassEffect(.regular.interactive(), in: .capsule)
+            .overlay {
+                Capsule()
+                    .strokeBorder(gradient, lineWidth: 1.5)
+                    .opacity(selected ? 1 : 0)
+                    .allowsHitTesting(false)
+            }
+            .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+}
+
+/// Primary action in Jobetics: a Liquid Glass capsule with a gradient outline and gradient label,
+/// used instead of a filled prominent button (house style: no plain filled gradient capsules).
+struct GradientCapsuleButtonStyle: ButtonStyle {
+    var gradient: LinearGradient = Brand.gradient
+    @Environment(\.controlSize) private var controlSize
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        let (h, v): (CGFloat, CGFloat) = switch controlSize {
+        case .mini, .small: (12, 6)
+        case .large, .extraLarge: (22, 14)
+        default: (16, 10)
+        }
+        configuration.label
+            .font(controlSize == .large || controlSize == .extraLarge ? .headline : .subheadline.weight(.semibold))
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            .padding(.horizontal, h)
+            .padding(.vertical, v)
+            .foregroundStyle(isEnabled ? AnyShapeStyle(gradient) : AnyShapeStyle(.tertiary))
+            .glassEffect(.regular.interactive(), in: .capsule)
+            .overlay {
+                Capsule().strokeBorder(isEnabled ? AnyShapeStyle(gradient) : AnyShapeStyle(.quaternary), lineWidth: 1.5)
+            }
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+            .animation(.snappy(duration: 0.2), value: configuration.isPressed)
+            .contentShape(.capsule)
+    }
+}
+
+extension ButtonStyle where Self == GradientCapsuleButtonStyle {
+    static var gradientCapsule: GradientCapsuleButtonStyle { GradientCapsuleButtonStyle() }
+    static func gradientCapsule(_ color: Color) -> GradientCapsuleButtonStyle { GradientCapsuleButtonStyle(gradient: Brand.gradient(for: color)) }
+}
+
+/// Non-interactive status label in the same outline style (e.g. "Freelance", "AI: review").
+struct OutlineCapsule: View {
+    var text: String
+    var symbol: String?
+    var gradient: LinearGradient = Brand.gradient
+
+    var body: some View {
+        Group {
+            if let symbol { Label(text, systemImage: symbol) } else { Text(text) }
+        }
+        .font(.caption.weight(.semibold))
+        .lineLimit(1)
+        .padding(.horizontal, 9)
+        .padding(.vertical, 4)
+        .foregroundStyle(gradient)
+        .overlay { Capsule().strokeBorder(gradient, lineWidth: 1.2) }
+    }
+}
+
+extension View {
+    func selectableCapsule(_ selected: Bool, gradient: LinearGradient = Brand.gradient) -> some View {
+        modifier(SelectableCapsule(selected: selected, gradient: gradient))
+    }
+}
+
+extension Brand {
+    /// Gradient derived from a single accent color (per-project colors).
+    static func gradient(for color: Color) -> LinearGradient {
+        LinearGradient(colors: [color.mix(with: .white, by: 0.25), color, color.mix(with: .black, by: 0.15)],
+                       startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+}
+
 struct SkillChip: View {
     var text: String
     var highlighted = false
@@ -127,8 +215,10 @@ struct SkillChip: View {
             .font(.caption.weight(.medium))
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
-            .foregroundStyle(highlighted ? .white : .primary)
-            .background(highlighted ? AnyShapeStyle(Brand.gradient) : AnyShapeStyle(.quaternary), in: .capsule)
+            .foregroundStyle(highlighted ? AnyShapeStyle(Brand.gradient) : AnyShapeStyle(.secondary))
+            .background(highlighted ? AnyShapeStyle(.clear) : AnyShapeStyle(.fill.tertiary), in: .capsule)
+            .overlay { if highlighted { Capsule().strokeBorder(Brand.gradient, lineWidth: 1.2) } }
+            .accessibilityLabel(highlighted ? Text("\(text), matches your skills") : Text(text))
     }
 }
 

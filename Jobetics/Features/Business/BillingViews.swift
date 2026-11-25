@@ -3,6 +3,7 @@ import SwiftUI
 
 struct BillingListView: View {
     @Environment(\.modelContext) private var context
+    @Environment(SettingsStore.self) private var settings
     let kind: BillingKind
     @Query private var documents: [BillingDocument]
     @State private var editing: BillingDocument?
@@ -11,7 +12,10 @@ struct BillingListView: View {
     init(kind: BillingKind) {
         self.kind = kind
         let raw = kind.rawValue
-        _documents = Query(filter: #Predicate<BillingDocument> { $0.kindRaw == raw }, sort: \BillingDocument.issueDate, order: .reverse)
+        // Credit notes are listed with the invoices they cancel.
+        let companion = kind == .invoice ? BillingKind.creditNote.rawValue : raw
+        _documents = Query(filter: #Predicate<BillingDocument> { $0.kindRaw == raw || $0.kindRaw == companion },
+                           sort: \BillingDocument.issueDate, order: .reverse)
     }
 
     private var filtered: [BillingDocument] { documents.filter { filter == nil || $0.status == filter } }
@@ -25,7 +29,10 @@ struct BillingListView: View {
                 ForEach(filtered) { doc in
                     NavigationLink { BillingDetailView(document: doc) } label: { BillingRow(document: doc) }
                         .swipeActions {
-                            Button("Delete", systemImage: "trash", role: .destructive) { context.delete(doc) }
+                            // Issued invoices are legal records: only drafts and quotes can be deleted.
+                            if doc.isDeletable {
+                                Button("Delete", systemImage: "trash", role: .destructive) { context.delete(doc) }
+                            }
                         }
                 }
             }
@@ -71,9 +78,11 @@ struct BillingListView: View {
     }
 
     private func makeNew() -> BillingDocument {
-        let year = Calendar.current.component(.year, from: .now)
-        let number = "\(kind.prefix)-\(year)-\(String(format: "%03d", documents.count + 1 + (kind == .invoice ? 30 : 15)))"
-        let doc = BillingDocument(kind: kind, number: number, clientName: "", dueDate: .now.addingTimeInterval(86_400 * 30))
+        // Quotes get their number right away. Invoices get the next legal number only when issued,
+        // so abandoned drafts never leave a gap in the sequence.
+        let number = kind == .quote ? settings.nextNumber(for: .quote) : ""
+        let doc = BillingDocument(kind: kind, number: number, clientName: "", dueDate: .now.addingTimeInterval(86_400 * 30),
+                                  taxRate: settings.settings.vatExempt ? 0 : settings.settings.defaultVATRate)
         context.insert(doc)
         return doc
     }
@@ -85,19 +94,22 @@ struct BillingRow: View {
     var body: some View {
         let status = document.isOverdue ? .overdue : document.status
         HStack(spacing: 12) {
-            Image(systemName: status.symbol)
+            Image(systemName: document.kind == .creditNote ? BillingKind.creditNote.symbol : status.symbol)
                 .font(.title2)
-                .foregroundStyle(color(for: status))
+                .foregroundStyle(document.kind == .creditNote ? Color.secondary : color(for: status))
+                .frame(width: 32)
             VStack(alignment: .leading, spacing: 2) {
                 Text(document.clientName.isEmpty ? String(localized: "New client") : document.clientName).font(.headline)
-                Text("\(document.number) · \(document.issueDate.formatted(date: .abbreviated, time: .omitted))")
+                Text("\(document.displayNumber) · \(document.issueDate.formatted(date: .abbreviated, time: .omitted))")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 2) {
                 Text(document.total.formatted).font(.headline.monospacedDigit())
-                Text(status.title).font(.caption.weight(.medium)).foregroundStyle(color(for: status))
+                Text(document.kind == .creditNote ? document.kind.title : document.isCancelled ? String(localized: "Cancelled") : status.title)
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(document.kind == .creditNote || document.isCancelled ? Color.secondary : color(for: status))
             }
         }
         .padding(.vertical, 2)
@@ -115,13 +127,17 @@ struct BillingRow: View {
 
 struct BillingDetailView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.openURL) private var openURL
+    @Environment(SettingsStore.self) private var settings
     @Bindable var document: BillingDocument
     @State private var editing = false
     @State private var pdfURL: URL?
+    @State private var confirmsCancel = false
+    @State private var isDraftingReminder = false
 
     var body: some View {
         ScrollView {
-            BillingPaper(document: document)
+            BillingPaper(document: document, business: settings.settings)
                 .background(.white, in: .rect(cornerRadius: 6))
                 .shadow(color: .black.opacity(0.12), radius: 20, y: 8)
                 .frame(maxWidth: 595)
@@ -129,10 +145,12 @@ struct BillingDetailView: View {
                 .environment(\.colorScheme, .light)
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle(document.number)
+        .navigationTitle(document.displayNumber)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) { Button("Edit") { editing = true } }
+            if document.isDeletable || document.kind == .quote {
+                ToolbarItem(placement: .topBarTrailing) { Button("Edit") { editing = true } }
+            }
             ToolbarSpacer(.fixed, placement: .topBarTrailing)
             ToolbarItem(placement: .topBarTrailing) {
                 if let pdfURL {
@@ -145,7 +163,12 @@ struct BillingDetailView: View {
         }
         .safeAreaInset(edge: .bottom) { actions }
         .sheet(isPresented: $editing) { BillingEditorView(document: document) }
-        .task(id: document.total) { pdfURL = BillingPDF.render(document) }
+        .task(id: "\(document.total.cents)-\(document.number)-\(document.statusRaw)") { pdfURL = BillingPDF.render(document, settings: settings.settings) }
+        .confirmationDialog("Cancel this invoice?", isPresented: $confirmsCancel, titleVisibility: .visible) {
+            Button("Issue a credit note", role: .destructive) { issueCreditNote() }
+        } message: {
+            Text("An issued invoice can't be deleted. A credit note with the opposite amount cancels it and keeps your numbering legal.")
+        }
     }
 
     @ViewBuilder private var actions: some View {
@@ -153,14 +176,32 @@ struct BillingDetailView: View {
             HStack {
                 switch (document.kind, document.status) {
                 case (.invoice, .sent), (.invoice, .overdue):
-                    Button("Mark as paid", systemImage: "checkmark.circle.fill") { markPaid() }.buttonStyle(.glassProminent)
+                    if !document.isCancelled {
+                        if document.isOverdue {
+                            Button("Remind", systemImage: "bell.badge") { Task { await sendReminder() } }
+                                .buttonStyle(.glass)
+                                .disabled(isDraftingReminder)
+                        }
+                        Menu("More", systemImage: "ellipsis") {
+                            Button("Cancel with a credit note", systemImage: BillingKind.creditNote.symbol, role: .destructive) { confirmsCancel = true }
+                        }
+                        .buttonStyle(.glass)
+                        Button("Mark as paid", systemImage: "checkmark.circle.fill") { markPaid() }.buttonStyle(.gradientCapsule)
+                    }
                 case (.quote, .sent):
                     Button("Declined", systemImage: "xmark") { document.status = .declined }.buttonStyle(.glass)
-                    Button("Accepted", systemImage: "hand.thumbsup.fill") { document.status = .accepted }.buttonStyle(.glassProminent)
+                    Button("Accepted", systemImage: "hand.thumbsup.fill") { document.status = .accepted }.buttonStyle(.gradientCapsule)
                 case (.quote, .accepted):
-                    Button("Convert to invoice", systemImage: "arrow.right.doc.on.clipboard") { convert() }.buttonStyle(.glassProminent)
+                    Button("Convert to invoice", systemImage: "arrow.right.doc.on.clipboard") { convert() }.buttonStyle(.gradientCapsule)
+                case (.invoice, .draft):
+                    Button("Issue invoice", systemImage: "checkmark.seal.fill") { issue() }
+                        .buttonStyle(.gradientCapsule)
+                        .disabled(document.clientName.isEmpty || document.items.isEmpty)
                 case (_, .draft):
-                    Button("Mark as sent", systemImage: "paperplane.fill") { document.status = .sent }.buttonStyle(.glassProminent)
+                    Button("Mark as sent", systemImage: "paperplane.fill") {
+                        document.status = .sent
+                        document.sentAt = .now
+                    }.buttonStyle(.gradientCapsule)
                 default:
                     EmptyView()
                 }
@@ -170,45 +211,95 @@ struct BillingDetailView: View {
         .padding()
     }
 
+    /// Assigns the next legal number and freezes the invoice.
+    private func issue() {
+        if document.number.isEmpty { document.number = settings.nextNumber(for: .invoice) }
+        document.issueDate = .now
+        document.status = .sent
+        document.sentAt = .now
+    }
+
     private func markPaid() {
         document.status = .paid
+        document.paidAt = .now
         context.insert(LedgerEntry(date: .now, amountCents: document.total.cents, kind: .income, category: "Client work",
                                    counterparty: document.clientName, invoiceNumber: document.number))
     }
 
+    private func issueCreditNote() {
+        let note = BillingDocument(kind: .creditNote, number: settings.nextNumber(for: .creditNote), clientName: document.clientName,
+                                   clientEmail: document.clientEmail, dueDate: .now, status: .paid, taxRate: document.taxRate)
+        note.clientAddress = document.clientAddress
+        note.relatedNumber = document.number
+        note.notes = String(localized: "Cancels invoice \(document.number).")
+        context.insert(note)
+        for item in document.items {
+            let copy = LineItem(title: item.title, quantity: -item.quantity, unitPriceCents: item.unitPriceCents, order: item.order)
+            copy.document = note
+            context.insert(copy)
+        }
+        document.relatedNumber = note.number
+    }
+
+    private func sendReminder() async {
+        isDraftingReminder = true
+        defer { isDraftingReminder = false }
+        let s = settings.settings
+        let penalty = Money(cents: TaxMath.latePenalty(amountCents: document.total.cents, daysLate: document.daysLate,
+                                                       yearlyRate: s.latePaymentRate)).formatted
+        let body = await WritingAssistant.paymentReminder(client: document.clientName, number: document.number, amount: document.total.formatted,
+                                                          daysLate: document.daysLate, reminderIndex: document.remindersSent,
+                                                          penalty: penalty, sender: s.displayName)
+        guard let url = SocialShare.mailURL(to: document.clientEmail, subject: String(localized: "Invoice \(document.number)"), body: body) else { return }
+        document.remindersSent += 1
+        document.status = .overdue
+        openURL(url)
+    }
+
     private func convert() {
-        let year = Calendar.current.component(.year, from: .now)
-        let count = (try? context.fetchCount(FetchDescriptor<BillingDocument>(predicate: #Predicate { $0.kindRaw == "invoice" }))) ?? 0
-        let invoice = BillingDocument(kind: .invoice, number: "INV-\(year)-\(String(format: "%03d", count + 30))",
+        // The invoice starts as a draft: it gets its legal number when issued.
+        let invoice = BillingDocument(kind: .invoice, number: "",
                                       clientName: document.clientName, clientEmail: document.clientEmail,
                                       dueDate: .now.addingTimeInterval(86_400 * 30), taxRate: document.taxRate)
         invoice.clientAddress = document.clientAddress
-        invoice.notes = String(localized: "Payment by bank transfer within 30 days.")
+        invoice.missionTitle = document.missionTitle
+        invoice.relatedNumber = nil
+        invoice.notes = String(localized: "Quote \(document.number) accepted.")
         context.insert(invoice)
         for item in document.items {
             let copy = LineItem(title: item.title, quantity: item.quantity, unitPriceCents: item.unitPriceCents, order: item.order)
             copy.document = invoice
             context.insert(copy)
         }
+        document.status = .paid // quote fulfilled → converted
     }
 }
 
 /// A4 document layout, used both on screen and for the PDF.
 struct BillingPaper: View {
     var document: BillingDocument
-    @Environment(MarketplaceStore.self) private var store
+    var business: BusinessSettings
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(store.account?.displayName ?? "").font(.title3.bold())
-                    Text(store.account?.email ?? "").font(.caption)
+                    Text(business.displayName).font(.title3.bold())
+                    if !business.tradeName.isEmpty && business.tradeName != business.legalName {
+                        Text(business.legalName).font(.caption)
+                    }
+                    Text(business.address).font(.caption)
+                    Text([business.email, business.phone].filter { !$0.isEmpty }.joined(separator: " · ")).font(.caption)
+                    if !business.siret.isEmpty { Text("SIRET \(business.siret)").font(.caption) }
                 }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 4) {
-                    Text(document.kind.title.uppercased()).font(.title2.weight(.heavy)).foregroundStyle(Brand.gradient)
-                    Text(document.number).font(.caption.monospaced())
+                    Text(document.kind.title.uppercased()).font(.title2.weight(.heavy)).foregroundStyle(Brand.indigo)
+                    Text(document.displayNumber).font(.caption.monospaced())
+                    if let related = document.relatedNumber, document.kind == .creditNote {
+                        Text("Cancels \(related)").font(.caption2)
+                    }
+                    if !document.missionTitle.isEmpty { Text(document.missionTitle).font(.caption2) }
                 }
             }
             HStack(alignment: .top) {
@@ -255,13 +346,24 @@ struct BillingPaper: View {
                 Spacer()
                 Grid(alignment: .trailing, horizontalSpacing: 16, verticalSpacing: 6) {
                     GridRow { Text("Subtotal").foregroundStyle(.secondary); Text(document.subtotal.formatted) }
-                    GridRow { Text("VAT \(document.taxRate.formatted())%").foregroundStyle(.secondary); Text(document.tax.formatted) }
+                    if document.taxRate > 0 {
+                        GridRow { Text("VAT \(document.taxRate.formatted())%").foregroundStyle(.secondary); Text(document.tax.formatted) }
+                    }
                     GridRow { Text("Total").bold(); Text(document.total.formatted).font(.headline) }
                 }
                 .font(.caption)
             }
             if !document.notes.isEmpty {
                 Text(document.notes).font(.caption).foregroundStyle(.secondary)
+            }
+            if document.kind != .quote {
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(business.legalMentions, id: \.self) { Text($0) }
+                }
+                .font(.system(size: 7))
+                .foregroundStyle(.secondary)
+            } else if !business.siret.isEmpty {
+                Text(business.vatExempt ? "TVA non applicable, art. 293 B du CGI" : "").font(.system(size: 7)).foregroundStyle(.secondary)
             }
         }
         .padding(32)
@@ -271,12 +373,11 @@ struct BillingPaper: View {
 
 enum BillingPDF {
     /// Renders the document to an A4 PDF in the temporary directory, ready to share.
-    static func render(_ document: BillingDocument) -> URL? {
-        let url = URL.temporaryDirectory.appending(path: "\(document.number).pdf")
+    static func render(_ document: BillingDocument, settings: BusinessSettings) -> URL? {
+        let url = URL.temporaryDirectory.appending(path: "\(document.number.isEmpty ? "draft" : document.number).pdf")
         let renderer = ImageRenderer(content:
-            BillingPaper(document: document)
+            BillingPaper(document: document, business: settings)
                 .frame(width: 595)
-                .environment(AppEnvironment.shared.store)
                 .environment(\.colorScheme, .light)
         )
         renderer.proposedSize = .init(width: 595, height: nil)
@@ -329,7 +430,7 @@ struct BillingEditorView: View {
                     TextField("Payment terms, bank details…", text: $document.notes, axis: .vertical)
                 }
             }
-            .navigationTitle(document.number)
+            .navigationTitle(document.displayNumber)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done", role: .confirm) { dismiss() } } }
         }

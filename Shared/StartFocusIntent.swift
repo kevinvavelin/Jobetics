@@ -12,11 +12,3 @@ nonisolated struct StartFocusIntent: AppIntent {
         return .result()
     }
 }
-
-nonisolated struct JobeticsShortcuts: AppShortcutsProvider {
-    static var appShortcuts: [AppShortcut] {
-        AppShortcut(intent: StartFocusIntent(),
-                    phrases: ["Start focus in \(.applicationName)", "Start a Pomodoro in \(.applicationName)"],
-                    shortTitle: "Start Focus", systemImageName: "timer")
-    }
-}

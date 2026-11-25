@@ -108,7 +108,7 @@ struct PortfolioDetailView: View {
                     Text(item.summary).font(.body)
                     FlowLayout { ForEach(item.tags, id: \.self) { SkillChip(text: $0, highlighted: true) } }
                     if let link = item.link {
-                        Button("Open project", systemImage: "safari") { openURL(link) }.buttonStyle(.glassProminent)
+                        Button("Open project", systemImage: "safari") { openURL(link) }.buttonStyle(.gradientCapsule)
                     }
                     if let name = item.attachmentName {
                         Label(name, systemImage: "paperclip").font(.subheadline).foregroundStyle(.secondary)
