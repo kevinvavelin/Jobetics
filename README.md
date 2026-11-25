@@ -147,4 +147,6 @@ The UI uses standard adaptive containers (`TabView(.sidebarAdaptable)`, size cla
 
 ## License
 
-TBD.
+**Source-available, not open source.** © 2026 Kevin Vavelin. All rights reserved.
+
+The code is public so you can read it and learn from it. You may **not** copy, modify, redistribute, build, publish or reuse any part of it, or use the Jobetics name or branding, without prior **written approval** from Kevin Vavelin. See [LICENSE](LICENSE) for the full terms.

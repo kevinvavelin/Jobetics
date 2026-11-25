@@ -850,6 +850,9 @@
         }
       }
     },
+    "An account already exists with this e-mail. Sign in instead." : {
+
+    },
     "Anonymous until you both accept contact" : {
       "localizations" : {
         "es" : {
@@ -897,6 +900,9 @@
           }
         }
       }
+    },
+    "At least 6 characters. We'll send you an e-mail to confirm your address." : {
+
     },
     "Attach a file (PDF, image…)" : {
       "localizations" : {
@@ -1219,6 +1225,9 @@
           }
         }
       }
+    },
+    "Choose a password of at least 6 characters." : {
+
     },
     "Choose cover image" : {
       "localizations" : {
@@ -1592,6 +1601,12 @@
         }
       }
     },
+    "Continue with e-mail" : {
+
+    },
+    "Continue with Google" : {
+
+    },
     "Convert to invoice" : {
       "localizations" : {
         "es" : {
@@ -1655,6 +1670,9 @@
           }
         }
       }
+    },
+    "Create account" : {
+
     },
     "Create your profile" : {
       "localizations" : {
@@ -2236,6 +2254,9 @@
         }
       }
     },
+    "Enter your e-mail address first." : {
+
+    },
     "Established" : {
       "localizations" : {
         "es" : {
@@ -2592,6 +2613,9 @@
         }
       }
     },
+    "Forgot password?" : {
+
+    },
     "Freelancer score" : {
       "localizations" : {
         "es" : {
@@ -2769,6 +2793,12 @@
           }
         }
       }
+    },
+    "Google sign-in failed. Please try again." : {
+
+    },
+    "Google sign-in isn't configured for this build." : {
+
     },
     "Great work is remembered. Being on time is too." : {
       "comment" : "Daily motivation line (Shared/Motivation.swift)",
@@ -2950,6 +2980,9 @@
           }
         }
       }
+    },
+    "If an account exists for this address, you'll receive an e-mail to reset your password." : {
+
     },
     "In progress" : {
       "localizations" : {
@@ -3933,6 +3966,9 @@
         }
       }
     },
+    "No connection. Check your network and try again." : {
+
+    },
     "No jobs posted yet" : {
       "localizations" : {
         "es" : {
@@ -4286,6 +4322,9 @@
           }
         }
       }
+    },
+    "Password" : {
+
     },
     "Pause" : {
       "localizations" : {
@@ -5727,6 +5766,9 @@
         }
       }
     },
+    "Sign in" : {
+
+    },
     "Sign out" : {
       "localizations" : {
         "es" : {
@@ -6406,6 +6448,9 @@
         }
       }
     },
+    "This account has been disabled." : {
+
+    },
     "This address imitates %@ but isn't the real %@ website." : {
       "localizations" : {
         "es" : {
@@ -6469,6 +6514,12 @@
           }
         }
       }
+    },
+    "This e-mail address isn't valid." : {
+
+    },
+    "This e-mail is already linked to another sign-in method." : {
+
     },
     "This employer hasn't been reviewed yet." : {
       "localizations" : {
@@ -6647,6 +6698,9 @@
           }
         }
       }
+    },
+    "Too many attempts. Try again in a few minutes." : {
+
     },
     "Top clients" : {
       "localizations" : {
@@ -7129,6 +7183,9 @@
           }
         }
       }
+    },
+    "Wrong e-mail or password." : {
+
     },
     "X (Twitter)" : {
       "localizations" : {

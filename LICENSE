@@ -1,0 +1,55 @@
+Jobetics Source-Available License
+Copyright (c) 2026 Kevin Vavelin. All rights reserved.
+
+This software, including its source code, documentation, designs, icons,
+images, screenshots, localized strings and all other files in this repository
+(the "Software"), is made publicly available for viewing and reference only.
+It is NOT open-source software.
+
+1. Permitted use
+   You may view and read the Software, for example on the hosting platform
+   where it is published, for personal learning and evaluation purposes.
+
+2. Prohibited without prior written approval
+   Unless you have obtained explicit prior written approval from Kevin Vavelin,
+   you may NOT, in whole or in part:
+   a. copy, reproduce or clone the Software, except the transient copies your
+      browser or device makes to display it;
+   b. modify, adapt, translate or create derivative works based on the
+      Software;
+   c. distribute, redistribute, publish, sublicense, sell, rent, lease or
+      otherwise make the Software available to any third party;
+   d. compile, build, deploy or run the Software, or submit it or any
+      derivative of it to any app store or distribution service;
+   e. use the Software, or any part of it, in any other product or service,
+      commercial or non-commercial;
+   f. use the "Jobetics" name, logo, icons or other branding;
+   g. use the Software to train, fine-tune or evaluate machine-learning or
+      artificial-intelligence models.
+
+3. Requesting approval
+   Requests for permission must be sent to Kevin Vavelin. Permission is
+   valid only if granted in writing, and only within the scope expressly
+   stated in that written approval.
+
+4. Contributions
+   Any contribution (issue, pull request, suggestion) submitted to this
+   repository may be used by Kevin Vavelin without restriction, and does not
+   grant the contributor any right over the Software.
+
+5. Reservation of rights
+   All rights not expressly granted in this license are reserved. Publishing
+   the source code does not grant any license, implied or otherwise, under any
+   copyright, trademark, patent or other intellectual property right.
+
+6. Termination
+   Any use of the Software in breach of this license automatically and
+   immediately terminates any permission you may have, without prejudice to
+   any other remedy available to Kevin Vavelin.
+
+7. Disclaimer
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+   THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
